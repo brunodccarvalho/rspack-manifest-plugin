@@ -28,7 +28,7 @@ export interface CompilationAsset extends Asset {
 const generateManifest = (
   compilation: Compilation,
   files: FileDescriptor[],
-  { generate, seed = {} }: InternalOptions
+  { generate, seed = {}, integrity }: InternalOptions
 ) => {
   let result: Manifest;
   if (generate) {
@@ -40,7 +40,13 @@ const generateManifest = (
     result = generate(seed, files, entrypoints, { compilation });
   } else {
     result = files.reduce(
-      (manifest, file) => Object.assign(manifest, { [file.name]: file.path }),
+      (manifest, file) => {
+        const value =
+          integrity && file.integrity
+            ? { src: file.path, integrity: file.integrity }
+            : file.path;
+        return Object.assign(manifest, { [file.name]: value });
+      },
       seed
     );
   }

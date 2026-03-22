@@ -22,6 +22,8 @@ export interface InternalOptions {
     entries: Record<string, string[]>,
     context: { compilation: Compilation }
   ) => Manifest;
+  integrity: boolean;
+  integrityHashes: string[];
   map: (file: FileDescriptor) => FileDescriptor;
   publicPath: string;
   removeKeyHash: RegExp | false;
@@ -42,6 +44,8 @@ const defaults = {
   fileName: 'manifest.json',
   filter: null,
   generate: void 0,
+  integrity: false,
+  integrityHashes: ['sha256', 'sha384', 'sha512'],
   map: null,
   publicPath: null,
   removeKeyHash: /([a-f0-9]{16,32}\.?)/gi,
